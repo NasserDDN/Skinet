@@ -3,4 +3,5 @@ Data/demo
 exps/
 Code/mmdetection
 Data/checkpoints
-Data/trained_models
+Data/trained_models/htc/trained_htc_swinv1.pth
+Data/trained_models/mask2former/trained_mask2former.pth
