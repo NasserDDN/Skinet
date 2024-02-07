@@ -67,7 +67,7 @@ You can download some pretrained models to make inferences. (### Put a link here
 Then you can adapt the inference script by changing paths and use it.
 Please refer to the inference_tutorial file for more information. 
 
-## Train
+## Training
 There are three training scripts: one for training an HTC with a Swin Transformer v1 as the backbone, another for training an HTC with a Swin v2 as the backbone, and a third for training a Mask2Former with a Swin v1 as the backbone.
 You can use these scripts by adapting the Parameters (comments explain the utility of each parameter).
 If you wish to modify the configuration files, please refer to the mmdetection_tutorial file for explanations.
