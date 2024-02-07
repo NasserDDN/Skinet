@@ -7,6 +7,16 @@ import shutil
 copy_input_images_to_another_dir = False
 generate_annotation = True
 
+# Folder path to be modified
+source_directory_train = 'previous_skinet/nephrology_mest_glom_dataset_train'
+target_directory_train = 'Skinet/Projet/Data/Datasets/skinet_dataset/mest_glom/train/data'
+
+source_directory_val = 'previous_skinet/nephrology_mest_glom_dataset_val'
+target_directory_val = 'Skinet/Projet/Data/Datasets/skinet_dataset/mest_glom/validation/data'
+
+source_directory_test = 'previous_skinet/test_mest_glom'
+target_directory_test = 'Skinet/Projet/Data/Datasets/skinet_dataset/mest_glom/test/data'
+
 
 def calculate_annotation_polygon(mask_path):
     # Load the mask image in grayscale
@@ -73,7 +83,7 @@ def generate_coco_json(base_path,train,train_categories):
         for class_folder in os.listdir(image_folder_path):
             class_folder_path = os.path.join(image_folder_path, class_folder)
 
-            # Ignore the 'full_images' and 'images' folders
+            # Ignore the 'full_images', 'images' and 'cortex' folders
             if class_folder in ["full_images", "images", "cortex"] or not os.path.isdir(class_folder_path):
                 continue
 
@@ -119,47 +129,47 @@ def generate_coco_json(base_path,train,train_categories):
 
 if generate_annotation:
     # Generate coco format annotation json
-    base_path = "previous_skinet/nephrology_inflammation_dataset_train"
-    train_annotation = generate_coco_json(base_path,train=True, train_categories="")
-    annnotation_path = 'Skinet/Projet/Data/Datasets/skinet_dataset/inflammation/train_with_cortex/labels.json'
+    train_annotation = generate_coco_json(source_directory_train,train=True, train_categories="")
+    annotation_path = os.path.dirname(target_directory_train)
+    annotation_path = os.path.join(annotation_path, 'labels.json')
     default_data ={} 
-    if not os.path.exists(annnotation_path):
-        os.makedirs(os.path.dirname(annnotation_path), exist_ok=True)
+    if not os.path.exists(annotation_path):
+        os.makedirs(os.path.dirname(annotation_path), exist_ok=True)
 
-        with open(annnotation_path, 'x') as file:
+        with open(annotation_path, 'x') as file:
             json.dump(default_data, file, indent=4)
-    with open( annnotation_path, 'w') as file:
+    with open( annotation_path, 'w') as file:
         json.dump(train_annotation, file, indent=4)
 
     print(train_annotation['categories'])
     print("train annotations generated")
 
-    base_path = "previous_skinet/nephrology_inflammation_dataset_val"
-    val_annotation = generate_coco_json(base_path, train=False, train_categories=train_annotation['categories'] )
-    annnotation_path = 'Skinet/Projet/Data/Datasets/skinet_dataset/inflammation/validation_with_cortex/labels.json'
+    val_annotation = generate_coco_json(source_directory_val, train=False, train_categories=train_annotation['categories'] )
+    annotation_path = os.path.dirname(target_directory_val)
+    annotation_path = os.path.join(annotation_path, 'labels.json')
 
-    if not os.path.exists(annnotation_path):
-        os.makedirs(os.path.dirname(annnotation_path), exist_ok=True)
+    if not os.path.exists(annotation_path):
+        os.makedirs(os.path.dirname(annotation_path), exist_ok=True)
 
-        with open(annnotation_path, 'x') as file:
+        with open(annotation_path, 'x') as file:
             json.dump(default_data, file, indent=4)
 
-    with open( annnotation_path, 'w') as file:
+    with open( annotation_path, 'w') as file:
         json.dump(val_annotation, file, indent=4)
 
     print("validation annotations generated")
 
-    base_path = "previous_skinet/nasser_files_test_images_1024"
-    val_annotation = generate_coco_json(base_path, train=False, train_categories=train_annotation['categories'] )
-    annnotation_path = 'Skinet/Projet/Data/Datasets/skinet_dataset/inflammation/test_with_cortex/labels.json'
+    val_annotation = generate_coco_json(source_directory_test, train=False, train_categories=train_annotation['categories'] )
+    annotation_path = os.path.dirname(target_directory_test)
+    annotation_path = os.path.join(annotation_path, 'labels.json')
 
-    if not os.path.exists(annnotation_path):
-        os.makedirs(os.path.dirname(annnotation_path), exist_ok=True)
+    if not os.path.exists(annotation_path):
+        os.makedirs(os.path.dirname(annotation_path), exist_ok=True)
 
-        with open(annnotation_path, 'x') as file:
+        with open(annotation_path, 'x') as file:
             json.dump(default_data, file, indent=4)
 
-    with open( annnotation_path, 'w') as file:
+    with open( annotation_path, 'w') as file:
         json.dump(val_annotation, file, indent=4)
 
     print("test annotations generated")
@@ -188,14 +198,7 @@ def copy_full_images(source_directory, target_directory):
 
 # Example of use
 if copy_input_images_to_another_dir:
-    source_directory = 'previous_skinet/nephrology_mest_glom_dataset_train'
-    target_directory = 'Skinet/Projet/Data/Datasets/skinet_dataset/mest_glom/train/data'
-    copy_full_images(source_directory, target_directory)
 
-    source_directory = 'previous_skinet/nephrology_mest_glom_dataset_val'
-    target_directory = 'Skinet/Projet/Data/Datasets/skinet_dataset/mest_glom/validation/data'
-    copy_full_images(source_directory, target_directory)
-
-    source_directory = 'previous_skinet/test_mest_glom'
-    target_directory = 'Skinet/Projet/Data/Datasets/skinet_dataset/mest_glom/test/data'
-    copy_full_images(source_directory, target_directory)
+    copy_full_images(source_directory_train, target_directory_train)
+    copy_full_images(source_directory_val, target_directory_val)
+    copy_full_images(source_directory_test, target_directory_test)
